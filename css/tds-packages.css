@@ -1,0 +1,308 @@
+/*
+ Styles for tds-packages plugin
+ 1.0.3
+*/
+.featherlight-iframe .featherlight-content {
+  height: 100% !important;
+  width: 95% !important;
+  margin: 0 auto !important;
+  -webkit-overflow-scrolling: touch;
+  overflow-y: hidden !important;
+}
+
+.featherlight .featherlight-inner {
+    height: 100% !important;
+    width: 100% !important;
+    padding: 10px;
+}
+/*
+ Styles for opulent-packages plugin
+*/
+
+.tds-packages * {
+  box-sizing: border-box;
+}
+.tds-packages {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  box-sizing: border-box;
+  max-width: 1170px;
+  margin: 0 auto;
+  /*padding:50px;*/
+}
+
+.tds-package-item {
+  /*flex: 0 1 calc(50% - 10px);*/
+  /*border: 1px solid #d4d4d4;*/
+  margin: 0 0 20px 10px;
+  display:flex;
+  flex-wrap:wrap;
+  box-shadow: 2px 3px 20px 2px rgba(0, 0, 0, 0.24);
+  min-height:200px;
+}
+.tds-package-item.columns-two {
+  width: calc(50% - 10px);
+
+}
+.tds-package-item.columns-three {
+  width: calc(33.33333% - 10px);
+
+}
+.tds-package-item.display-top .tds-item-img {
+  max-height: 200px;
+}
+
+.tds-package-item.columns-three:nth-child(3n+1) {
+  margin: 0 10px 20px 0;
+}
+
+.tds-package-item.columns-three:nth-child(3n+2) {
+  margin: 0 5px 20px 5px;
+}
+
+.tds-package-item.columns-two:nth-child(odd) {
+  margin: 0 10px 20px 0;
+}
+.tds-package-item:last-child {
+    margin-bottom: 20px !important;
+}
+
+.tds-item-img {
+  flex: 0 1 50%;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  overflow: hidden;
+  transition: all .5s;
+}
+.tds-item-img-bg {
+  height: 100%;
+  position: relative;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center center;
+  transition: all .5s;
+}
+.tds-item-img img.wp-post-image{
+  visibility:hidden;
+  height:auto;
+  width:auto;
+  max-height:100%;
+  max-width:100%;
+}
+.tds-item-img:hover .tds-item-img-bg {
+  transform: scale(1.1);
+}
+.display-top .tds-item-img {
+  flex: 0 1 100%;
+  min-height:200px;
+}
+.entry-content .tds-item-img img {
+  width: auto;
+  height: 100%;
+  /*max-width: 50px;*/
+  max-height:226px;
+  max-width:100%;
+  object-fit: cover;
+  visibility: hidden;
+}
+.tds-item-desc {
+  position: relative;
+  display: flex;
+  width: 50%;
+  flex-direction: column;
+}
+.display-top .tds-item-desc {
+  flex: 0 1 100%;
+}
+.tds-item-desc .tds-click-overlay {
+  /* hide on desktop */
+  display:none;
+}
+.tds-packages a.clickable-link {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  z-index: 99;
+}
+.display-top .tds-item-img {
+  transition: 0.3s ease;
+}
+.display-top.desc-no .tds-item-img:hover {
+  transform: scale(1.05, 1.05);
+  opacity: 0.9;
+}
+.tds-combined-title {
+  background-color: #2d75b6;
+  padding: 10px;
+  display: flex;
+}
+.tds-combined-title h3 {
+  color: #f1f1f1;
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom:0;
+}
+.tds-combined-title h3 a {
+  color: #f1f1f1;
+}
+.tds-combined-title h3 a:hover {
+  opacity: 0.8;
+  text-decoration: none;
+}
+.tds-description {
+  padding: 12px;
+}
+.tds-description {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  flex-direction: column;
+  flex: 1;
+}
+
+.tds-description p, .tds-description h5, .tds-description span{
+  font-size: 16px !important;
+  /*text-align: justify;*/
+  line-height: 22px;
+}
+.columns-three .tds-description p {
+  text-align: left;
+}
+.tds-meta {
+  width: 100%;
+  text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+.tds-meta .tds-meta-name, .tds-meta .tds-meta-price-combined {
+  font-size: 16px !important;
+  font-weight: bold;
+}
+.tds-description p:last-of-type{
+  margin-bottom: 0;
+}
+.tds-description h5 {
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+.tds-click-overlay {
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.65);
+  color: #B1BAC3;
+  text-transform: uppercase;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+.tds-package-item.display-side .tds-click-overlay {
+  padding: 7px 10px 7px;
+}
+.tds-click-overlay a {
+  color: #e8e8e8;
+  font-weight: 500;
+  font-size: 20px;
+}
+.tds-item-img:hover a,
+.tds-click-overlay a:hover {
+  color: #e0a81f;
+  text-decoration: none;
+  transition: color 0.2s ease;
+
+}
+
+.display-side .tds-click-overlay a {
+  font-size: 14px;
+  font-weight: 600;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.display-side .tds-click-overlay .tds-link-icon {
+  min-width: 50px;
+  position: relative;
+}
+
+.display-side .tds-click-overlay .tds-link-icon .fa-stack.fa-lg {
+ position: relative;
+ right:0;
+}
+.tds-packages .fa-stack.fa-lg {
+  min-width: 1.5em;
+  height: 1.5em;
+  line-height: 1.5em;
+}
+.tds-packages .fa-stack.fa-lg .fa-stack-2x {
+  font-size: 1.5em;
+}
+.tds-packages .fa-stack.fa-lg .fa-stack-1x {
+  font-size: 0.7em;
+}
+/* Click to view text */
+.tds-click-overlay a .fa-stack {
+  /*position: absolute;
+  bottom: 8px;*/
+  /*margin-left: 5px;
+  margin-right: 20px;*/
+  transition: margin 0.8s ease;
+  /*margin-top: -5px;*/
+  /*margin-bottom: 2px;*/
+}
+.tds-ctv-link {
+  padding-top: 4px;
+}
+
+.tds-item-img:hover a .fa-stack,
+.tds-click-overlay a:hover .fa-stack {
+   /*right: 0;*/
+   margin-left: 15px;
+   margin-right: 0;
+
+}
+/* hide the icon on display-top */
+.display-top .tds-click-overlay .fa-stack {
+  display: none;
+}
+
+.display-top.desc-yes .tds-combined-title {
+  display:none;
+}
+@media only screen and ( min-width: 981px ) {
+
+} /* end @media only screen and ( min-width: 981px ) */
+@media only screen and ( max-width:767px )  {
+  .tds-package-item {
+    flex: 0 1 100%;
+  }
+
+  .tds-package-item,
+  .tds-package-item:nth-child(odd),
+  .tds-package-item.columns-three:nth-child(3n+1),
+  .tds-package-item.columns-three:nth-child(3n+2),
+  .tds-package-item.columns-two:nth-child(odd) {
+    margin: 0 0 20px 0;
+  }
+
+} /* end @media only screen and ( max-width:767px ) */
+
+@media only screen and ( max-width:525px )  {
+  .tds-item-img,
+  .tds-item-desc {
+    flex: 1 1 100%;
+  }
+
+  .tds-item-img {
+    min-height:180px;
+  }
+  .tds-click-overlay {
+    text-align: right;
+  }
+} /* end @media only screen and ( max-width:525px )  */

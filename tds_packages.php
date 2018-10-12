@@ -3,20 +3,32 @@
 Plugin Name: Build Custom Packages for Tours and Activities
 Plugin URI: http://talleyservices.com
 Description: Allows adding custom packages that can be shown on pages using a simple shortcode
-Version: 1.3.1
+Version: 1.4
 Author: Talley Services
 Author URI: http://talleyservices.com
 License: GPLv2
 */
-
+// namespace Cindy;
 //Include the admin panel page
-include( dirname( __FILE__ ) . '/tds_packages_admin.php');
+require_once( dirname( __FILE__ ) . '/tds_packages_admin.php');
+//Include the CPT functions
+require_once( dirname( __FILE__ ) . '/lib/dustysun-wp-cpt-api/ds_wp_cpt_api.php');
 
+require_once( dirname( __FILE__ ) . '/cpt/tds_packages.php');
+use \TDSPackages\CPT;
 class TDS_Packages {
+
+  private $tds_packages_cpt;
+
   // private $meta_box_field_array = array();
   public function __construct() {
+
+    // activate the CPT
+    $this->tds_packages_cpt = new CPT\TDSPackagesCPT();
+
+
     //Fill the meta box fields in the object
-    $this->meta_box_fields = $this->tds_packages_add_fields();
+    // $this->meta_box_fields = $this->tds_packages_add_fields();
 
     // Register the JS for the admin screen
     add_action( 'admin_enqueue_scripts', array($this, 'register_admin_tds_packages_scripts'));
@@ -25,32 +37,32 @@ class TDS_Packages {
 		add_action( 'wp_enqueue_scripts', array( $this, 'register_tds_packages_styles_scripts' ) );
 
     // Allow file uploads
-    add_action('post_edit_form_tag', array($this, 'update_edit_form'));
+    // add_action('post_edit_form_tag', array($this, 'update_edit_form'));
 
     // Register the CPT
-    add_action( 'init', array( $this, 'register_tds_packages' ) );
+    // add_action( 'init', array( $this, 'register_tds_packages' ) );
 
     // Register the taxonomies
-    add_action( 'init', array( $this, 'tds_packages_register_taxonomies' ));
+    // add_action( 'init', array( $this, 'tds_packages_register_taxonomies' ));
 
     // Register the custom title
-    add_filter( 'enter_title_here', array($this, 'tds_packages_change_title_text') );
+    // add_filter( 'enter_title_here', array($this, 'tds_packages_change_title_text') );
 
     // Add the meta box fields
-    add_action('add_meta_boxes', array($this, 'tds_add_main_meta_box'));
+    // add_action('add_meta_boxes', array($this, 'tds_add_main_meta_box'));
 
     // Add the custom columns to the post field view
-    add_filter('manage_edit-tds_packages_columns', array($this, 'set_custom_edit_tds_packages_columns'));
+    // add_filter('manage_edit-tds_packages_columns', array($this, 'set_custom_edit_tds_packages_columns'));
 
     // Fill the custom columns with data from  postmeta
-    add_action('manage_tds_packages_posts_custom_column', array($this, 'custom_tds_packages_column'), 10, 2);
+    // add_action('manage_tds_packages_posts_custom_column', array($this, 'custom_tds_packages_column'), 10, 2);
 
     //Allow custom column sorting
-    add_filter('manage_edit-tds_packages_sortable_columns', array($this, 'custom_tds_packages_sortable_columns'));
-    add_filter('request', array($this, 'tds_package_post_type_orderby'));
+    // add_filter('manage_edit-tds_packages_sortable_columns', array($this, 'custom_tds_packages_sortable_columns'));
+    // add_filter('request', array($this, 'tds_package_post_type_orderby'));
 
     //Save the CPT data
-    add_action('save_post',  array($this,'tds_save_data'));
+    // add_action('save_post',  array($this,'tds_save_data'));
 
     register_activation_hook( __FILE__, array($this, 'tds_default_settings' ));
 
@@ -66,11 +78,40 @@ class TDS_Packages {
     wp_register_style('tds-featherlight', plugins_url('css/featherlight.css', __FILE__));
     wp_enqueue_style('tds-featherlight');
 
+
+    wp_register_style('tds-magnific-popup', plugins_url('lib/magnific-popup/magnific-popup.css', __FILE__));
+    wp_enqueue_style('tds-magnific-popup');
+
+
+    wp_register_style('tds-bxslider', plugins_url('lib/bxslider/jquery.bxslider.min.css', __FILE__));
+    wp_enqueue_style('tds-bxslider');
+
+
+    // wp_register_style('tds-pretty-photo', plugins_url('lib/pretty-photo/css/prettyPhoto.css', __FILE__));
+    // wp_enqueue_style('tds-pretty-photo');
+
+
     wp_register_script('tds-packages', plugins_url('js/tds-packages.js', __FILE__));
     wp_enqueue_script('tds-packages');
 
     wp_register_script('tds-featherlight', plugins_url('js/featherlight.js', __FILE__));
     wp_enqueue_script('tds-featherlight');
+
+
+    wp_register_script('tds-magnific-popup', plugins_url('lib/magnific-popup/jquery.magnific-popup.min.js', __FILE__));
+    wp_enqueue_script('tds-magnific-popup');
+
+
+    // wp_register_script('tds-pretty-photo', plugins_url('lib/pretty-photo/jsjquery.prettyPhoto.js', __FILE__));
+    // wp_enqueue_script('tds-pretty-photo');
+
+
+    // wp_register_script('tds-jssor', plugins_url('lib/jssor/jssor.slider.min.js', __FILE__));
+    // wp_enqueue_script('tds-jssor');
+
+    wp_register_script('tds-bxslider', plugins_url('lib/bxslider/jquery.bxslider.min.js', __FILE__));
+    wp_enqueue_script('tds-bxslider');
+
   } //end public function register_tds_packages_styles
 
   //Enqueue the scripts for the post editor
@@ -168,7 +209,7 @@ class TDS_Packages {
 
                   'tds_package_lightbox' => array(
                     'label' => 'Lightbox',
-                    'value' => 'lightbox',
+                    'value' => 'lightbox_iframe',
                   ),
                 ),
           ),
@@ -779,15 +820,20 @@ class TDS_Packages_Shortcode {
         $tds_link_data_lightbox = '';
         $tds_package_link_type =  get_post_meta($tds_post_id, 'tds_package_link_type', true);
         $tds_package_url_target = '';
+
+        $build_gallery_div = false;
+        $tds_package_url_target = '_self';
+        //Get the saved link
+        $tds_package_url = get_post_meta($tds_post_id, 'tds_package_page_url', true);
         if($tds_package_link_type == 'blank') {
           // $tds_package_pdf_itinerary = get_post_meta($tds_post_id, 'tds_package_pdf_itinerary', true);
           // $tds_package_url = $tds_package_pdf_itinerary['url'];
           $tds_package_url_target = '_blank';
-        } elseif($tds_package_link_type == 'self') {
-          $tds_package_url_target = '_self';
-        } elseif($tds_package_link_type == 'lightbox') {
-          $tds_package_url_target = '_self';
+        } elseif($tds_package_link_type == 'lightbox_iframe') {
           $tds_link_data_lightbox = 'data-featherlight="iframe"';
+        } elseif($tds_package_link_type == 'lightbox_gallery') {
+          $tds_package_url = '#gallery-' . $tds_post_id;
+          $build_gallery_div = true;
         } else {
           //check if it's a PDF
           if (substr($tds_package_url,-3)=="pdf") {
@@ -797,8 +843,6 @@ class TDS_Packages_Shortcode {
           }
         }//end if($tds_package_link_type[0] == 'pdf')
 
-        //Get the saved link
-        $tds_package_url = get_post_meta($tds_post_id, 'tds_package_page_url', true);
 
 
         //Get the link text, if any
@@ -894,7 +938,7 @@ class TDS_Packages_Shortcode {
 
           $tdsHTML .= '<div class="tds-item-img">';
 
-          $tdsHTML .= '<a class="clickable-link" href="' . $tds_package_url . '" target="' . $tds_package_url_target . '"></a>';
+          $tdsHTML .= '<a class="clickable-link" href="' . $tds_package_url . '" target="' . $tds_package_url_target . '"' . $tds_link_data_lightbox . '></a>';
 
             $tdsHTML .= '<div class="tds-item-img-bg" style="background-image: url(' . $tds_package_thumbnail. ')">';
 
@@ -902,7 +946,7 @@ class TDS_Packages_Shortcode {
 
               $tdsHTML .= '</div> <!-- end tds-item-img-bg-->';
             $tdsHTML .= '<div class="tds-click-overlay">';
-              $tdsHTML .= '<a href="' . $tds_package_url . '" target="' . $tds_package_url_target . '">' . $tds_click_to_view_text . '</a>';
+              $tdsHTML .= '<a href="' . $tds_package_url . '" target="' . $tds_package_url_target . '"' . $tds_link_data_lightbox . '>' . $tds_click_to_view_text . '</a>';
             $tdsHTML .= '</div><!-- end tds-click-overlay-->';
 
           $tdsHTML .= '</div> <!-- end tds-item-img-->';
@@ -910,7 +954,7 @@ class TDS_Packages_Shortcode {
         if($tdsCustomAttributes['desc'] == 'yes') {
           $tdsHTML .= '<div class="tds-item-desc">';
             $tdsHTML .= '<div class="tds-combined-title" style="background-color: ' . $tds_package_color . ';"><h3>';
-            $tdsHTML .= '<a href="' . $tds_package_url . '" target="' . $tds_package_url_target . '">' .         $tds_header_line . '</a></h3></div>';
+            $tdsHTML .= '<a href="' . $tds_package_url . '" target="' . $tds_package_url_target . '"' . $tds_link_data_lightbox . '>' .         $tds_header_line . '</a></h3></div>';
               $tdsHTML .= '<div class="tds-description"><span>';
               $tdsHTML .= $tds_package_description . '</span>';
               // $tdsHTML .= '</p></div>';
@@ -920,11 +964,49 @@ class TDS_Packages_Shortcode {
 
           $tdsHTML .= '</div> <!-- end tds-item-desc-->';
         }
+        
+        if($build_gallery_div) {
+          $tdsHTMLGalleryPager = '<div class="bx-pager">';
+
+          
+          $tdsHTML .= '<div id="gallery-' . $tds_post_id .'" class="gallery" style="display: block;">';
+
+          // get the gallery photos
+          $gallery_photo_ids = get_post_meta($tds_post_id, 'tds_package_photos', true);
+          $tdsHTML .= '<ul class="bxslider">';
+
+          $gallery_photo_counter = 0; 
+
+          foreach($gallery_photo_ids as $gallery_photo_id) {
+            // retrieve the URL of the thumb 
+            // retrieve the URL of the full size
+            $gallery_image_full = wp_get_attachment_image($gallery_photo_id, 'full');
+
+            // retrieve the URL of the full size
+            $gallery_image_thumb_url = wp_get_attachment_image_src($gallery_photo_id, 'thumb')[0];
+            // $tdsHTML .= '<a href="' . $gallery_image_url . '">' . $gallery_image_thumb . '</a>';
+
+            $tdsHTML .= '<li><p>Photo number ' . $gallery_photo_counter . '</p>' . $gallery_image_full . '</li>';
+
+            $tdsHTMLGalleryPager .= '<a data-slide-index="' . $gallery_photo_counter . '" href="#" style="display: inline-block; max-width:100px;">' . $gallery_image_full . '</a>';
+
+            ++$gallery_photo_counter;
+          } // end foreach 
+
+          $tdsHTML .= '</ul>';
+
+          $tdsHTMLGalleryPager .= '</div>';
+
+          $tdsHTML .= $tdsHTMLGalleryPager;
+
+          $tdsHTML .= '</div>';
+        }
 
         //Close outer item HTML
         $tdsHTML .= '</div> <!-- end tds-package-item -->';
 
       } // end foreach($tds_packages_query_items as $tds_packages_query_item)
+
       //close the outer div
       $tdsHTML .= '</div> <!-- end tds-packages -->';
 
@@ -935,14 +1017,15 @@ class TDS_Packages_Shortcode {
   } //end public function add_tds_packages_shortcode
 
 
-private function debug_to_console($data) {
-    if(is_array($data) || is_object($data))
-  {
-    echo("<script>console.log('PHP: ".json_encode($data)."');</script>");
-  } else {
-    echo("<script>console.log('PHP: ".addslashes($data)."');</script>");
-  }
-}
+  public function wl ( $log )  {
+    if ( true === WP_DEBUG ) {
+        if ( is_array( $log ) || is_object( $log ) ) {
+            error_log( print_r( $log, true ) );
+        } else {
+            error_log( $log );
+        }
+    }
+  } // end public function wl 
 } //end class
   $tds_packages_shortcode = new TDS_Packages_Shortcode();
   $tds_packages = new TDS_Packages();

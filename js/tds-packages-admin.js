@@ -32,10 +32,10 @@ $(document).ready(function() {
   } //end $("input[name$='tds_package_link_type[]']").click(function()
 
   //show or hide the sections based on clicking the radio button
-  $("input[name='tds_package_link_type']").on('click', ShowHideLinkType );
+  // $("input[name='tds_package_link_type']").on('click', ShowHideLinkType );
 
   //Show or hide on page load
-  $("input[name='tds_package_link_type']:checked").trigger( "click" );
+  // $("input[name='tds_package_link_type']:checked").trigger( "click" );
 
 }); //end $(document).ready(function()
 

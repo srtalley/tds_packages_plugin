@@ -275,6 +275,25 @@
 .display-top.desc-yes .tds-combined-title {
   display:none;
 }
+.flexslider-slides,
+.flexslider-carousel {
+  margin-bottom: 0 !important;
+}
+.entry-content .flexslider ul {
+  list-style:none;
+  /* padding-inline-start: 0 !important; */
+}
+.flexslider-carousel li {
+  width: 100px !important;
+}
+.featherlight .featherlight-content, .featherlight .featherlight-inner {
+  margin-bottom: 0 !important;
+  padding: 0 !important;
+  border-bottom: 0 !important;
+}
+.featherlight .featherlight-content {
+  overflow: hidden !important;
+}
 @media only screen and ( min-width: 981px ) {
 
 } /* end @media only screen and ( min-width: 981px ) */

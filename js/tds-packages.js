@@ -1,74 +1,42 @@
 jQuery(function($) {
 
-console.log('area you edvent');
 $(document).ready(function() {
 
-    // $('.gallery').each(function() { // the containers for all your galleries
-    //     $(this).magnificPopup({
-    //         delegate: 'a', // the selector for gallery item
-    //         type: 'image',
-    //         gallery: {
-    //           enabled:true
-    //         }
-    //     });
-    // });
-    // $('.open-popup-link').magnificPopup({
-    //     type:'inline',
-    //     midClick: true // Allow opening popup on middle mouse click. Always set it to true if you don't provide alternative source in href.
-    //   });
-
-    // $('.bxslider').bxSlider({
-    //     'easing': 'ease-in-out',
-    //     // 'pagerType': 'full'
-    //     'pagerCustom': '.bx-pager'
-    // });
-    console.log(ajaxfrontendurl.ajax_url);
     $('.open-popup-link').click(function(e){
         e.preventDefault();
+        var gallery_title = $(this).data('slidertitle');
         var gallery_post_id = $(this).data('loadslider');
-        var flexslider_wrapper = $('#flexslider-wrapper');
+        // Show loading animation
+        var package_card = $(this).closest('.tds-package-item');
+        $(package_card).addClass('tds-popup-loading');
         $.ajax(
             {
                 url: ajaxfrontendurl.ajax_url,
                 type: 'POST',
                 data: {
                     action: 'tds_load_slider_images',
+                    gallery_title: gallery_title,
                     gallery_post_id: gallery_post_id,
                 },
                 success: function (response) {
-                    // $('#colophon').prepend(response.html);
-                    console.log(response.status);
-                    showFeatherlight(response.html, flexslider_wrapper, gallery_post_id);
-                    
-                    // initializeFlexSlider(gallery_post_id);
-                    // var current_time = new Date($.now());
-                    // wp_settings_api_response_data += '<p><strong>' + current_time + '</strong></p>';
-        
-                    // wp_settings_api_response_data += '<h4>Result: ' + response.messages + '</h4>';
-                    // //final
-                    // $(wp_settings_api_response).prepend(wp_settings_api_response_data);
+                    showLightbox(response.html, gallery_post_id);
+                    $(package_card).removeClass('tds-popup-loading');
                   }
             })
     });
-    // $( document ).on('click', '.open-popup-link', {
-    //     function() {
 
-    //     }
-    // };
-    function showFeatherlight(html, element, gallery_id){
-        console.log('show f');
-        // element.html(html);
-        // , {
-        //     // namespace:'yourmom',
-        //     resetCss: true,
-        //     closeSpeed: 5000,
-            
-        // }
-        $.featherlight(html);
+    function showLightbox(html, gallery_id){
+
+        $.magnificPopup.open({
+            mainClass: 'mfp-fade tds-gallery',
+            items: {
+                src: html,
+                type: 'inline'
+            }
+        });
         initializeFlexSlider(gallery_id);
     }
     function initializeFlexSlider(gallery_id) {
-        console.log('CALLED' + gallery_id);
         // The slider being synced must be initialized first
 
         $('#carousel-' + gallery_id).flexslider({
@@ -86,9 +54,31 @@ $(document).ready(function() {
             controlNav: false,
             animationLoop: true,
             slideshow: false,
-            sync: '#carousel' + gallery_id
+            sync: '#carousel-' + gallery_id
         });
     }
+
+    $('.open-iframe-link').click(function(e){
+        e.preventDefault();
+        var iframe_src = $(this).attr('href');
+
+        var iframe_options = {
+            type: 'iframe',
+            items: {
+                src: iframe_src,
+            },
+            iframe: {
+                markup: '<div class="tds-packages-iframe block-review">'+
+                        '<div class="mfp-close"></div>'+
+                        '<iframe align="center" class="mfp-iframe" width="90%" height="90%" frameborder="0"></iframe>'+
+                        '</div>',
+            },
+            mainClass: 'mfp-custom-iframe',
+        }
+        $.magnificPopup.open(iframe_options);
+
+        // $('.open-iframe-link').magnificPopup(option);
+    });
 
 
 }); //end $(document).ready(function()

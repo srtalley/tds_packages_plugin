@@ -211,6 +211,9 @@ a.ds-wp-cpt-post-title-select {
 }
 .ds-wp-cpt-image-gallery-uploader-removable.has-image img {
   display: block;
+  object-fit: cover;
+  width: 150px;
+  height: 150px;
 }
 .ds-wp-cpt-uploader-removable.has-media:before {
   position: absolute;

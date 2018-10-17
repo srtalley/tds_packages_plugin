@@ -20,18 +20,6 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
     // Register the taxonomies
     add_action( 'init', array( $this, 'tds_packages_register_taxonomies' ));
 
-    
-    
-    // Custom JS for the CPT in the admin area
-    // add_action( 'admin_head', array($this, 'wpla_licenses_admin_scripts') );
-
-   
-
-    // Add the pages to the appropriate spot in the menu
-    // add_action('admin_menu', array($this, 'tds_packages_admin_menu'), 100);
-
-
-
     // Register the custom title
     add_filter( 'enter_title_here', array($this, 'tds_packages_change_title_text') );
 
@@ -45,10 +33,6 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
     add_filter('manage_edit-tds_packages_sortable_columns', array($this, 'custom_tds_packages_sortable_columns'));
     add_filter('request', array($this, 'tds_package_post_type_orderby'));
 
-
-    // Add the meta box fields
-    // add_action('add_meta_boxes_' . $this->custom_post_type, array($this,'add_update_server_links_metabox'));
-    // add_action('add_meta_boxes_' . $this->custom_post_type, array($this,'add_woocommerce_info_metabox'));
   } // end function __construct
 
   public function register_tds_packages() {
@@ -78,17 +62,6 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
       );
       register_post_type( 'tds_packages', $args );
   } //end private function register_wpla_licenses
-
-
-//   public function tds_packages_admin_menu() {
-//     add_submenu_page(
-//         'edit.php?post_type=tds_packages',
-//         __('Settings', 'tds_packages'),
-//         __('Settings', 'tds_packages'),
-//         'manage_options',
-//         'tds_packages_menu',
-//         array($this, 'tds_packages_menu_options'));
-//   } //end function tds_packages_admin_menu
 
   // replaces abstract function in library 
   public function define_meta_box_fields($post_id = null) {
@@ -150,7 +123,7 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
         ),
         array(
           'label' => 'Photos:',
-          'desc' => 'Hold shift to select multiple items',
+          'desc' => 'Hold shift or alt (cmd) to select multiple items',
           'id' => 'tds_package_photos',
           'type' => 'gallery',
           'class' => 'lightbox_gallery toggle_link_type',
@@ -197,7 +170,6 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
  
         return $title;
    } //end function tds_packages_change_title_text( $title )
-
 
 
   //Add custom columns and unset columns to post list view
@@ -291,7 +263,6 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
     );
     register_taxonomy( 'tds-packages-duration', array( 'tds_packages' ), $duration_args );
 
-
     $location_labels =  array(
         'name'              => __( 'Locations', 'tds_packages_plugin'),
         'singular_name'     => __( 'Location', 'taxonomy singular name' ),
@@ -339,100 +310,5 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
     register_taxonomy( 'tds-packages-type', array( 'tds_packages' ), $type_args );
 
   } //end function tds_packages_register_taxonomies
-
-
-
-  /**
-   * Add a bit of style
-   */
-  public function wpla_licenses_admin_scripts() {
-    // only load these scripts on the appropriate CPT edit screen
-    $screen = get_current_screen();
-    if( is_object($screen) && 'wpla_licenses' == $screen->post_type ) {
-    ?>
-    <style>
-      body.post-type-wpla_licenses #post-body-content {
-        margin-bottom: 0;
-      }
-    </style>
-  	<script>
-  		jQuery( document ).ready( function( $ ) {
-
-        var license_validity_measurement = $('#wpla_license_validity\\[measurement\\]');
-        var license_validity_term = $('#wpla_license_validity\\[term\\]');
-
-        // set the number box to grayed out if forever is selected
-        if(license_validity_measurement.length) {
-          
-          enable_disable_software_license_validity_term($(license_validity_measurement).val().toLowerCase());
-
-          // change it if the menu is changed
-          $(license_validity_measurement).change(function(){
-            enable_disable_software_license_validity_term(this.value);
-          });
-
-          function enable_disable_software_license_validity_term(select_value) {
-            if(select_value == 'forever'){
-              //disable the input box
-              $(license_validity_term).prop("disabled", true);
-              $(license_validity_term).val('');
-              $(license_validity_term).attr('placeholder', '');
-            } else {
-              $(license_validity_term).prop("disabled", false);
-              //check if there is no value
-              if($(license_validity_term).val() < 1) {
-                $(license_validity_term).val('1');
-                $(license_validity_term).css({'border': '1px solid red'});
-              }
-            }
-          } //end function enable_disable_software_license_validity_term
-        } // end if length
-  		});
-	   </script>
-     <style>
-        th.manage-column.column-wpla_license_num_of_installations,
-        td.wpla_license_num_of_installations.column-wpla_license_num_of_installations {
-          width: 30px;
-        }
-        th.manage-column.column-wpla_license_type,
-        td.wpla_license_type.column-wpla_license_type {
-          width: 105px;
-        }
-        th.manage-column.column-wpla_license_order_number,
-        td.wpla_license_order_number.column-wpla_license_order_number {
-          width: 70px;
-        }
-        td.wpla_license_num_of_installations.column-wpla_license_num_of_installations,
-        td.wpla_license_order_number.column-wpla_license_order_number {
-          text-align: center;
-        }
-        td.date.column-date,
-        td.wpla_license_type.column-wpla_license_type {
-          font-size: 12px;
-        }
-        @media (max-width: 1200px) {
-          th.manage-column.column-wpla_license_order_number,
-          td.wpla_license_order_number.column-wpla_license_order_number {
-            display:none;
-          }
-          th.manage-column.column-wpla_product_name,
-          td.wpla_product_name.column-wpla_product_name {
-            display:none;
-          }
-        }
-        @media (max-width: 1400px) { 
-          th.manage-column.column-wpla_license_manual_updatepkg,
-          td.wpla_license_manual_updatepkg.column-wpla_license_manual_updatepkg {
-            display:none;
-          }
-          th.manage-column.column-wpla_license_website_url,
-          td.wpla_license_website_url.column-wpla_license_website_url {
-            display:none;
-          }
-        }
-     </style>
-     <?php 
-    } // end if
-  } // end function wpla_licenses_admin_scripts()
 
 } // end class TDSPackagesCPT

@@ -183,7 +183,6 @@ class TDS_Packages_Shortcode {
         $tds_package_link_type =  get_post_meta($tds_post_id, 'tds_package_link_type', true);
         $tds_package_url_target = '';
 
-        $build_gallery_div = false;
         $tds_package_url_target = '_self';
         //Get the saved link
         $tds_package_url = get_post_meta($tds_post_id, 'tds_package_page_url', true);
@@ -194,13 +193,12 @@ class TDS_Packages_Shortcode {
           // $tds_package_url = $tds_package_pdf_itinerary['url'];
           $tds_package_url_target = '_blank';
         } elseif($tds_package_link_type == 'lightbox_iframe') {
-          $tds_link_data = 'data-featherlight="iframe"';
+          $tds_package_url_class = 'open-iframe-link';
         } elseif($tds_package_link_type == 'lightbox_gallery') {
           $tds_package_url = '#gallery-wrap-' . $tds_post_id;
           $tds_package_url_class = 'open-popup-link';
           // $tds_link_data = 'data-featherlight="#gallery-wrap-' . $tds_post_id . '"';
-          $tds_link_data = 'data-loadslider="' . $tds_post_id . '"';
-          $build_gallery_div = true;
+          $tds_link_data = 'data-slidertitle="' . $tds_package_title . '" data-loadslider="' . $tds_post_id . '"';
         } else {
           //check if it's a PDF
           if (substr($tds_package_url,-3)=="pdf") {
@@ -254,7 +252,7 @@ class TDS_Packages_Shortcode {
 
         //GET THE TYPE OF ITEM - TOUR, ACTIVITY or LOCATION
         //Check what kind of post this is
-        $tds_package_post_type =  get_post_meta($tds_post_id, 'tds_package_post_type', true);
+        $tds_package_post_type = get_post_meta($tds_post_id, 'tds_package_post_type', true);
 
          //Set the header color
         $tds_package_color;
@@ -331,47 +329,7 @@ class TDS_Packages_Shortcode {
 
           $tdsHTML .= '</div> <!-- end tds-item-desc-->';
         }
-        if($build_gallery_div) {
-          // $this->tds_load_slider_images($tds_post_id);
-          $tdsHTML .= '<div id="flexslider-wrapper"></div>';
-        }
-        if($build_gallery_divss) {
-          $tdsHTML .= '<div id="gallery-wrap-' . $tds_post_id .'" class="mfp-d">'; 
-          $tdsHTMLGallerySlides = '<div id="gallery-' . $tds_post_id .'" class="flexslider flexslider-slides" style="display: block;"><ul class="slides">';
-
-          $tdsHTMLGalleryPager = '<div id="carousel" class="flexslider flexslider-carousel"><ul class="slides">';
-
-          // get the gallery photos
-          $gallery_photo_ids = get_post_meta($tds_post_id, 'tds_package_photos', true);
-          // $tdsHTMLGallerySlides .= '<ul class="slides">';
-
-          $gallery_photo_counter = 0; 
-
-          foreach($gallery_photo_ids as $gallery_photo_id) {
-            // retrieve the URL of the thumb 
-            // retrieve the URL of the full size
-            $gallery_image_full = wp_get_attachment_image($gallery_photo_id, 'full');
-
-            // retrieve the URL of the full size
-            $gallery_image_thumb_url = wp_get_attachment_image_src($gallery_photo_id, 'medium')[0];
-            // $tdsHTML .= '<a href="' . $gallery_image_url . '">' . $gallery_image_thumb . '</a>';
-
-            $tdsHTMLGallerySlides .= '<li><p>Photo number ' . $gallery_photo_counter . '</p>' . $gallery_image_full . '</li>';
-
-            $tdsHTMLGalleryPager .= '<li><img src="' . $gallery_image_thumb_url . '"></li>';
-
-            ++$gallery_photo_counter;
-          } // end foreach 
-
-          $tdsHTMLGallerySlides .= '</ul></div>';
-
-          $tdsHTMLGalleryPager .= '</ul></div>';
-          $tdsHTML .= $tdsHTMLGallerySlides;
-          $tdsHTML .= $tdsHTMLGalleryPager;
-          $tdsHTML .= '</div>';
-          
-        }
-
+      
         //Close outer item HTML
         $tdsHTML .= '</div> <!-- end tds-package-item -->';
 
@@ -387,49 +345,53 @@ class TDS_Packages_Shortcode {
 
 
   public function tds_load_slider_images() {
-    $this->wl('wel ');
 
     if(isset($_POST['gallery_post_id']) && !empty($_POST['gallery_post_id'])){
         $lightbox_post_id = $_POST['gallery_post_id'];
-        $this->wl($lightbox_post_id );
+        $lightbox_title = $_POST['gallery_title'];
+        
+        $tdsLoadLightboxHTML = '<div class="tds-gallery-wrap" id="gallery-wrap-' . $lightbox_post_id .'">'; 
+        
+            $tdsLoadLightboxHTML.= '<div class="tds-gallery-title"><h1>' . $lightbox_title . '</h1></div>';
+            $tdsLoadLightboxHTMLGallerySlides = '<div id="gallery-' . $lightbox_post_id .'" class="flexslider flexslider-slides" style="display: block;"><ul class="slides">';
 
-        $tdsLoadLightboxHTML = '<div id="gallery-wrap-' . $lightbox_post_id .'" class="mfp-d">'; 
-          $tdsLoadLightboxHTMLGallerySlides = '<div id="gallery-' . $lightbox_post_id .'" class="flexslider flexslider-slides" style="display: block;"><ul class="slides">';
+            $tdsLoadLightboxHTMLGalleryPager = '<div id="carousel-' . $lightbox_post_id .'" class="flexslider flexslider-carousel"><ul class="slides">';
 
-          $tdsLoadLightboxHTMLGalleryPager = '<div id="carousel-' . $lightbox_post_id .'" class="flexslider flexslider-carousel"><ul class="slides">';
+            // get the gallery photos
+            $gallery_photo_ids = get_post_meta($lightbox_post_id, 'tds_package_photos', true);
+            // $tdsLoadLightboxHTMLGallerySlides .= '<ul class="slides">';
 
-          // get the gallery photos
-          $gallery_photo_ids = get_post_meta($lightbox_post_id, 'tds_package_photos', true);
-          // $tdsLoadLightboxHTMLGallerySlides .= '<ul class="slides">';
+            $gallery_photo_counter = 0; 
 
-          $gallery_photo_counter = 0; 
+            foreach($gallery_photo_ids as $gallery_photo_id) {
 
-          foreach($gallery_photo_ids as $gallery_photo_id) {
-            // retrieve the URL of the thumb 
-            // retrieve the URL of the full size
-            $gallery_image_full = wp_get_attachment_image($gallery_photo_id, 'full');
+                $gallery_image_full = wp_get_attachment_image_src($gallery_photo_id, 'full')[0];
 
-            // retrieve the URL of the full size
-            $gallery_image_thumb_url = wp_get_attachment_image_src($gallery_photo_id, 'medium')[0];
-            // $tdsLoadLightboxHTML .= '<a href="' . $gallery_image_url . '">' . $gallery_image_thumb . '</a>';
+                $gallery_image_title = get_the_title($gallery_photo_id);
 
-            $tdsLoadLightboxHTMLGallerySlides .= '<li><p>Photo number ' . $gallery_photo_counter . '</p>' . $gallery_image_full . '</li>';
+                // retrieve the URL of the full size
+                $gallery_image_thumb_url = wp_get_attachment_image_src($gallery_photo_id, 'medium')[0];
 
-            $tdsLoadLightboxHTMLGalleryPager .= '<li><img src="' . $gallery_image_thumb_url . '"></li>';
+                // $attachment_meta = get_post($gallery_photo_id);
+                // $this->wl($attachment_meta);
+                
+                $tdsLoadLightboxHTMLGallerySlides .= '<li><h3>' . $gallery_image_title . '</h3><div class="flexslider slidebg" style="background-image:url(\'' . $gallery_image_full . '\');"><img src="' . $gallery_image_full . '"></div></li>';
 
-            ++$gallery_photo_counter;
-          } // end foreach 
+                $tdsLoadLightboxHTMLGalleryPager .= '<li style="background-image:url(\'' . $gallery_image_thumb_url . '\');"><img src="' . $gallery_image_thumb_url . '"></li>';
 
-          $tdsLoadLightboxHTMLGallerySlides .= '</ul></div>';
+                ++$gallery_photo_counter;
+            } // end foreach 
 
-          $tdsLoadLightboxHTMLGalleryPager .= '</ul></div>';
-          $tdsLoadLightboxHTML .= $tdsLoadLightboxHTMLGallerySlides;
-          $tdsLoadLightboxHTML .= $tdsLoadLightboxHTMLGalleryPager;
-        $tdsLoadLightboxHTML .= '</div>';
-        $response = array(
-            'html' => $tdsLoadLightboxHTML,
-            'status' => 'success',
-        );
+            $tdsLoadLightboxHTMLGallerySlides .= '</ul></div>';
+
+            $tdsLoadLightboxHTMLGalleryPager .= '</ul></div>';
+            $tdsLoadLightboxHTML .= $tdsLoadLightboxHTMLGallerySlides;
+            $tdsLoadLightboxHTML .= $tdsLoadLightboxHTMLGalleryPager;
+            $tdsLoadLightboxHTML .= '</div>';
+            $response = array(
+                'html' => $tdsLoadLightboxHTML,
+                'status' => 'success',
+            );
     } else {
         $response = array(
             'html' => '',

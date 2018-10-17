@@ -85,10 +85,10 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
 
       //allow media file uploads
       wp_enqueue_media();
-      wp_enqueue_script('ds-wp-cpt-api-mediauploader', plugins_url('/js/ds-wp-cpt-file-uploader.js', __FILE__), array('jquery'), '1.0', '');
+      wp_enqueue_script('ds-wp-cpt-api-mediauploader', plugins_url('/js/ds-wp-cpt-file-uploader.js', __FILE__), array('jquery'), '1.3.5', '');
 
       // Load the JS
-      wp_enqueue_script( 'ds-wp-cpt-api-admin', plugins_url( '/js/ds-wp-cpt-api-admin.js', __FILE__ ), array('jquery'), false, true );
+      wp_enqueue_script( 'ds-wp-cpt-api-admin', plugins_url( '/js/ds-wp-cpt-api-admin.js', __FILE__ ), array('jquery'), '1.3.5', true );
     } // end if( is_object($screen) && 'wpla_licenses' == $screen->post_type )
   }
 
@@ -558,7 +558,7 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
                   // if( $ds_wp_cpt_attachment_have_img ) $removeable_class = 'has-image';
                   if ( $ds_wp_cpt_attachment_have_img_gallery ) {
                     echo '<div class="ds-wp-cpt-image-gallery-uploader-removable has-image">';
-                      echo '<img src="' . $ds_wp_cpt_attachment_img_gallery_src[0] . '" alt="" style="max-width:100%;" />';
+                      echo '<img src="' . $ds_wp_cpt_attachment_img_gallery_src[0] . '" alt="" />';
                       echo '<input name="' . $field['id'] . '[' . $gallery_counter . ']" id="' . $field['id'] . $gallery_counter . '"  class="ds-wp-cpt-image-gallery-uploader-value" type="hidden"  value="' . $ds_gallery_image_id . '"/>';
                     echo '</div>';
 

@@ -3,7 +3,7 @@
 Plugin Name: Build Custom Packages for Tours and Activities
 Plugin URI: http://talleyservices.com
 Description: Allows adding custom packages that can be shown on pages using a simple shortcode
-Version: 1.4
+Version: 1.4.2
 Author: Talley Services
 Author URI: http://talleyservices.com
 License: GPLv2
@@ -40,7 +40,7 @@ class TDS_Packages {
   //Enqueue the styles
   public function register_tds_packages_styles_scripts() {
 
-    wp_register_style('tds-packages', plugins_url('css/tds-packages.css', __FILE__), '', '1.4');
+    wp_register_style('tds-packages', plugins_url('css/tds-packages.css', __FILE__), '', '1.4.2');
     wp_enqueue_style('tds-packages');
 
     wp_register_style('tds-magnific-popup', plugins_url('lib/magnific-popup/magnific-popup.css', __FILE__));

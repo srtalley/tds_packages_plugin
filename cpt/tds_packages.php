@@ -122,12 +122,28 @@ class TDSPackagesCPT extends DSWPCPTAPI\CPTBuilder {
             'default' => ''
         ),
         array(
-          'label' => 'Photos:',
+          'label' => 'Lightbox Photos:',
           'desc' => 'Hold shift or alt (cmd) to select multiple items',
           'id' => 'tds_package_photos',
           'type' => 'gallery',
           'class' => 'lightbox_gallery toggle_link_type',
           'default' => ''
+        ),
+        array(
+            'label' => 'Lightbox Link Shortcode Option 1:',
+            'desc' => 'Insert this shortcode in a page to add a link to the lightbox gallery. The link title will be the same as the package name.',
+            'id' => 'tds_package_lightbox_shortcode_opt1',
+            'type' => 'info',
+            'class' => 'lightbox_gallery toggle_link_type',
+            'default' => '[pkg-gallery-link id="' . $post_id . '"]'
+        ),
+        array(
+            'label' => 'Lightbox Link Shortcode Option 2:',
+            'desc' => 'Insert this shortcode in a page to add a link to the lightbox gallery with a link title you specify with the label as shown.',
+            'id' => 'tds_package_lightbox_shortcode_opt2',
+            'type' => 'info',
+            'class' => 'lightbox_gallery toggle_link_type',
+            'default' => '[pkg-gallery-link id="' . $post_id . '" label="ReplaceWithYourLinkText"]'
         ),
         array(
             'label' => 'Package Description:',

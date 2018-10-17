@@ -8,19 +8,10 @@ class TDS_Packages_Shortcode {
   public function __construct() {
 
     add_shortcode( 'show-packages', array($this, 'add_tds_packages_shortcode') );
+    add_shortcode( 'pkg-gallery-link', array($this, 'add_tds_pkg_gallery_link_shortcode') );
     add_action( 'wp_ajax_nopriv_tds_load_slider_images', array($this, 'tds_load_slider_images') );
     add_action( 'wp_ajax_tds_load_slider_images',  array($this, 'tds_load_slider_images') );
   }
-  public function write_log ( $log )  {
-        if ( true === WP_DEBUG ) {
-            if ( is_array( $log ) || is_object( $log ) ) {
-                error_log( print_r( $log, true ) );
-            } else {
-                error_log( $log );
-            }
-        }
-    }
-
 
   public function add_tds_packages_shortcode($tdsAttributes =[], $tdsContent = null, $tdsTag = '') {
 
@@ -151,8 +142,6 @@ class TDS_Packages_Shortcode {
     //   array_multisort($tds_sort_duration, SORT_NUMERIC, $tds_sort_price, SORT_NUMERIC, $tds_packages_query_items);
     // } //end if ($tdsCustomAttributes['class'] == strtolower('tour'))
 
-
-
     if( $tds_packages_query_items ) {
       $tdsHTML = '';
       //make the enclosing div
@@ -197,7 +186,6 @@ class TDS_Packages_Shortcode {
         } elseif($tds_package_link_type == 'lightbox_gallery') {
           $tds_package_url = '#gallery-wrap-' . $tds_post_id;
           $tds_package_url_class = 'open-popup-link';
-          // $tds_link_data = 'data-featherlight="#gallery-wrap-' . $tds_post_id . '"';
           $tds_link_data = 'data-slidertitle="' . $tds_package_title . '" data-loadslider="' . $tds_post_id . '"';
         } else {
           //check if it's a PDF
@@ -208,11 +196,8 @@ class TDS_Packages_Shortcode {
           }
         }//end if($tds_package_link_type[0] == 'pdf')
 
-
-
         //Get the link text, if any
         $tds_package_link_text = get_post_meta($tds_post_id, 'tds_package_page_link_text', true);
-
 
         //GET THE DESTINATIONS
         $tds_destination_names = array();
@@ -222,7 +207,6 @@ class TDS_Packages_Shortcode {
         endforeach; endif;
         $tds_destinations = implode(', ', $tds_destination_names);
 
-
         //GET THE DURATIONS
         $tds_duration_names = array();
         $tds_packages_duration = get_the_terms($tds_post_id, 'tds-packages-duration');
@@ -230,7 +214,6 @@ class TDS_Packages_Shortcode {
           $tds_duration_names[] = $tds_duration->name;
         endforeach; endif;
         $tds_durations = implode(', ', $tds_duration_names);
-
 
         //GET THE TYPES
         $tds_type_names = array();
@@ -240,7 +223,6 @@ class TDS_Packages_Shortcode {
         endforeach; endif;
         $tds_types = implode(', ', $tds_type_names);
 
-
         //GET THE LOCATIONS
         $tds_location_names = array();
         $tds_packages_location = get_the_terms($tds_post_id, 'tds-packages-location');
@@ -248,7 +230,6 @@ class TDS_Packages_Shortcode {
           $tds_location_names[] = $tds_location->name;
         endforeach; endif;
         $tds_locations = implode(', ', $tds_location_names);
-
 
         //GET THE TYPE OF ITEM - TOUR, ACTIVITY or LOCATION
         //Check what kind of post this is
@@ -267,7 +248,6 @@ class TDS_Packages_Shortcode {
           $tds_click_to_view_text = 'View ' . $tds_package_title;
         }
 
-
         // COLORS
          //  IS A TOUR OR ACTIVITY
         $tds_meta = '';
@@ -282,7 +262,6 @@ class TDS_Packages_Shortcode {
           $tds_click_to_view_text = 'View Detailed Itinerary';
           $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from </span> <span class="tds-meta-price-combined"> <strong>&nbsp;$' . $tds_package_price . 'pp</strong></span>';
           $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from $' . $tds_package_price . 'pp</span>';
-          // $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from </span> <span class="tds-meta-price-combined"><span class="fa-stack fa-lg"><i class="fa fa-circle-o fa-stack-2x"></i><i class="fa fa-stack-1x fa-usd" aria-hidden="true"></i></span>' . '<span class="tds-meta-price">' . $tds_package_price . '</span></span>';
 
         } elseif($tds_package_post_type == 'Location') {
           $tds_package_color = get_option('tds_packages_location_color_option');
@@ -322,8 +301,6 @@ class TDS_Packages_Shortcode {
             $tdsHTML .= '<a class="' . $tds_package_url_class . '" href="' . $tds_package_url . '" target="' . $tds_package_url_target . '" ' . $tds_link_data . '>' .         $tds_header_line . '</a></h3></div>';
               $tdsHTML .= '<div class="tds-description"><span>';
               $tdsHTML .= $tds_package_description . '</span>';
-              // $tdsHTML .= '</p></div>';
-              // $tdsHTML .= '<div class="tds-meta"><p>';
               $tdsHTML .= '<div class="tds-meta">' . $tds_meta;
               $tdsHTML .= '</div></div>';
 
@@ -372,9 +349,6 @@ class TDS_Packages_Shortcode {
                 // retrieve the URL of the full size
                 $gallery_image_thumb_url = wp_get_attachment_image_src($gallery_photo_id, 'medium')[0];
 
-                // $attachment_meta = get_post($gallery_photo_id);
-                // $this->wl($attachment_meta);
-                
                 $tdsLoadLightboxHTMLGallerySlides .= '<li><h3>' . $gallery_image_title . '</h3><div class="flexslider slidebg" style="background-image:url(\'' . $gallery_image_full . '\');"><img src="' . $gallery_image_full . '"></div></li>';
 
                 $tdsLoadLightboxHTMLGalleryPager .= '<li style="background-image:url(\'' . $gallery_image_thumb_url . '\');"><img src="' . $gallery_image_thumb_url . '"></li>';
@@ -401,6 +375,39 @@ class TDS_Packages_Shortcode {
 
     wp_send_json($response);
   } // end function tds_load_slider_images
+
+  public function add_tds_pkg_gallery_link_shortcode($tdsAttributes =[], $tdsContent = null) {
+    //make the array keys and attributes lowercase
+    $tdsAttributes = array_change_key_case((array)$tdsAttributes, CASE_LOWER);
+    //override any default attributes with the user defined parameters
+    $tdsCustomAttributes = shortcode_atts([
+      'id'      => null,
+      'label'          => null
+    ], $tdsAttributes, $tdsTag);
+
+
+
+    if($tdsCustomAttributes['id'] != null) {
+
+      // set the label if it was used between shortcodes
+      if($tdsContent != null) {
+        $tdsCustomAttributes['label'] = $tdsContent;
+      } // end if 
+
+      // get the title 
+      $tds_package_title = get_the_title($tdsCustomAttributes['id']);
+
+      if($tdsCustomAttributes['label'] == null) {
+        $tdsCustomAttributes['label'] = $tds_package_title;
+      }
+
+      $tds_link_data = 'data-slidertitle="' . $tds_package_title . '" data-loadslider="' . $tdsCustomAttributes['id'] . '"';
+
+      $tdsGalleryLinkHTML = '<a class="open-popup-link" href="#gallery-wrap-' . $tdsCustomAttributes['id'] . '" ' . $tds_link_data . '>' . $tdsCustomAttributes['label'] . '</a>';
+      return $tdsGalleryLinkHTML;
+    } // end if
+  } // end function add_tds_pkg_gallery_link_shortcode
+
   public function wl ( $log )  {
     if ( true === WP_DEBUG ) {
         if ( is_array( $log ) || is_object( $log ) ) {

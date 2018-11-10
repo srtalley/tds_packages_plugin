@@ -1,6 +1,6 @@
 /*
  Styles for tds-packages plugin
- 1.4.2
+ 1.4.3
 */
 .featherlight-iframe .featherlight-content {
   height: 100% !important;
@@ -282,12 +282,24 @@
 .entry-content .flexslider ul {
   list-style:none;
 }
-.mfp-wrap {
-  width: 80%;
+.mfp-wrap.tds-gallery {
   max-width: 1080px;
+  margin: 0 auto;
   left: 50% !important;
   top: 50% !important;
   transform: translate(-50%, -50%);
+}
+.tds-gallery .flexslider {
+  background: none; 
+}
+.tds-gallery .flexslider .slides {
+  zoom: 1.05;
+}
+.tds-gallery .mfp-content .modal-content {
+  border-radius: 0;
+  border: none;
+  box-shadow: none;
+  -webkit-box-shadow: none;
 }
 .tds-gallery.mfp-close-btn-in .mfp-close {
   color: #d5a65f;

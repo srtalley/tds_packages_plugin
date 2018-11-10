@@ -1,41 +1,41 @@
 jQuery(function($) {
 
 $(document).ready(function() {
-    
+
     $('.open-popup-link').click(function(e){
         e.preventDefault();
         var gallery_title = $(this).data('slidertitle');
         var gallery_post_id = $(this).data('loadslider');
+        // Show loading animation
+        var package_card = $(this).closest('.tds-package-item');
+        $(package_card).addClass('tds-popup-loading');
+        $.ajax(
+            {
+                url: ajaxfrontendurl.ajax_url,
+                type: 'POST',
+                data: {
+                    action: 'tds_load_slider_images',
+                    gallery_title: gallery_title,
+                    gallery_post_id: gallery_post_id,
+                },
+                success: function (response) {
+                    showLightbox(response.html, gallery_post_id);
+                    $(package_card).removeClass('tds-popup-loading');
+                  }
+            })
+    });
+
+    function showLightbox(html, gallery_id){
 
         $.magnificPopup.open({
             mainClass: 'mfp-fade tds-gallery',
             items: {
-                type: 'ajax',
-                src: ajaxfrontendurl.ajax_url
-            },
-            ajax: {
-                settings: {
-                    type: 'POST',
-                    data: {
-                        action: 'tds_load_slider_images',
-                        gallery_title: gallery_title,
-                        gallery_post_id: gallery_post_id,
-                    }
-                }
-            },
-            callbacks: {
-                parseAjax: function(mfpResponse) {
-                    console.log(mfpResponse.data);
-                    mfpResponse.data = mfpResponse.data.html;
-                }, 
-                ajaxContentAdded: function() {
-                    initializeFlexSlider(gallery_post_id);
-                }
+                src: html,
+                type: 'inline'
             }
         });
-
-    });
-
+        initializeFlexSlider(gallery_id);
+    }
     function initializeFlexSlider(gallery_id) {
         // The slider being synced must be initialized first
 

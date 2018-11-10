@@ -3,7 +3,7 @@
 Plugin Name: Build Custom Packages for Tours and Activities
 Plugin URI: http://talleyservices.com
 Description: Allows adding custom packages that can be shown on pages using a simple shortcode
-Version: 1.4.2
+Version: 1.4.3
 Author: Talley Services
 Author URI: http://talleyservices.com
 License: GPLv2
@@ -40,7 +40,7 @@ class TDS_Packages {
   //Enqueue the styles
   public function register_tds_packages_styles_scripts() {
 
-    wp_register_style('tds-packages', plugins_url('css/tds-packages.css', __FILE__), '', '1.4.2');
+    wp_register_style('tds-packages', plugins_url('css/tds-packages.css', __FILE__), '', '1.4.3');
     wp_enqueue_style('tds-packages');
 
     wp_register_style('tds-magnific-popup', plugins_url('lib/magnific-popup/magnific-popup.css', __FILE__));
@@ -49,7 +49,7 @@ class TDS_Packages {
     wp_register_style('tds-flexslider', plugins_url('lib/flexslider/flexslider.css', __FILE__));
     wp_enqueue_style('tds-flexslider');
 
-    wp_register_script('tds-packages', plugins_url('js/tds-packages.js', __FILE__), array('jquery'), '1.4');
+    wp_register_script('tds-packages', plugins_url('js/tds-packages.js', __FILE__), array('jquery'), '1.4.3');
     wp_localize_script( 'tds-packages', 'ajaxfrontendurl',
     array( 'ajax_url' => admin_url( 'admin-ajax.php' ) ) );
     wp_enqueue_script('tds-packages');

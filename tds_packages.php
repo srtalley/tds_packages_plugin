@@ -3,7 +3,7 @@
 Plugin Name: Build Custom Packages for Tours and Activities
 Plugin URI: http://talleyservices.com
 Description: Allows adding custom packages that can be shown on pages using a simple shortcode
-Version: 1.4.3
+Version: 1.4.4
 Author: Talley Services
 Author URI: http://talleyservices.com
 License: GPLv2

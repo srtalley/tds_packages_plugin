@@ -51,6 +51,13 @@ For the inputs, add 'class' => 'specificradiovalue toggle_blankname'. If the rad
 
 
 ### Changelog
+#### 1.3.7 - 2018-11-15 
+* Fixed an issue with values not being saved in draft posts.
+
+#### 1.3.6 - 2018-11-10 
+* Fixed an error with saving number field with 0 as the value.
+* Fixed an error with the hover effect on images.
+
 #### 1.3.5 - 2018-10-11 
 * Added gallery image type.
 * Fixed errors in the radio and checkbox types.

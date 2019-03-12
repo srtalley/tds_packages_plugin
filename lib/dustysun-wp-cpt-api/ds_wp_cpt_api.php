@@ -1,6 +1,6 @@
 <?php
 // GitHub: N/A
-// Version 1.3.5
+// Version 1.3.7
 // Author: Steve Talley
 // Organization: Dusty Sun
 // Author URL: https://dustysun.com/
@@ -129,7 +129,8 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
   public function ds_wp_cpt_api_standard_format_box($post, $callback_fields) {
     // Use nonce for verification
     wp_nonce_field(basename(__FILE__), 'ds_wp_cpt_api_meta_box_nonce');
-
+    $this->wl('eat shit');
+    $this->wl($post);
     echo '<div class="ds-wp-cpt-metabox-settings">';
 
     if(isset($callback_fields['args']['prepend_info'])) {
@@ -146,15 +147,14 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
         $field_default = isset($field['default']) && !empty($field['default']) ? $field['default'] : '';
 
         $saved_meta_value = null;
-
-        if($post->post_status == 'publish') {
-          // get current post meta data
-          $saved_meta_value = get_post_meta($post->ID, $field['id'], true);
+        // get the saved values if any
+        $saved_meta_value = get_post_meta($post->ID, $field['id'], true);
+        if($saved_meta_value != '' && $saved_meta_value != null) {
           $value_shown = $saved_meta_value;
         } else {
           $value_shown = $field_default;
-        }
-
+        } // end if($saved_meta_value != '' && $saved_meta_value != null) 
+        
         // Read only flag
         if(isset($field['readonly']) && $field['readonly'] == 'true') {
           $readonly = 'readonly';
@@ -536,7 +536,6 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
             // See if there's a media id already saved as post meta
             $ds_wp_cpt_attachment_img_gallery_ids = get_post_meta( $post->ID, $field['id'], true );
 
-            $this->wl($ds_wp_cpt_attachment_img_gallery_ids);
             echo $standardFieldLabel;
             echo '<div class="ds-wp-cpt-image-gallery-uploader">';
 
@@ -547,15 +546,12 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
             if(is_array($ds_wp_cpt_attachment_img_gallery_ids)) {
               
               foreach ($ds_wp_cpt_attachment_img_gallery_ids as $ds_gallery_image_id) {
-                // $this->wl($ds_gallery_image_id);
                   // Get the image src
                   $ds_wp_cpt_attachment_img_gallery_src = wp_get_attachment_image_src( $ds_gallery_image_id, 'thumbnail' );
                   // For convenience, see if the array is valid
                   $ds_wp_cpt_attachment_have_img_gallery = is_array( $ds_wp_cpt_attachment_img_gallery_src );
 
                   // add a class to the removable div to show hover effects 
-                  // $removeable_class = '';
-                  // if( $ds_wp_cpt_attachment_have_img ) $removeable_class = 'has-image';
                   if ( $ds_wp_cpt_attachment_have_img_gallery ) {
                     echo '<div class="ds-wp-cpt-image-gallery-uploader-removable has-image">';
                       echo '<img src="' . $ds_wp_cpt_attachment_img_gallery_src[0] . '" alt="" />';
@@ -719,7 +715,7 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
               $field['id'], $field['label']);
             }
             //save the sanitized value or retain the existing one
-            if ($sanitized_value && $sanitized_value != $existing_value) {
+            if (isset($sanitized_value) && $sanitized_value != $existing_value) {
                 update_post_meta($post_id, $field['id'], $sanitized_value);
             } elseif ('' == $sanitized_value && $existing_value) {
                 delete_post_meta($post_id, $field['id'], $existing_value);

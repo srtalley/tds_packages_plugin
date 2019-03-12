@@ -1,4 +1,4 @@
-/* WP CPT 1.3.5 */
+/* WP CPT 1.3.6 */
 
 #wpbody .wrap {
   font-family: 'Open Sans', Arial, sans-serif;
@@ -251,10 +251,7 @@ a.ds-wp-cpt-post-title-select {
   position: absolute;
   height: 100%;
 }
-.ds-wp-cpt-image-uploader-removable.has-image:hover,
-.ds-wp-cpt-image-uploader-image-gallery-container.has-image:before,
-.ds-wp-cpt-image-uploader-image-container:before,
-.ds-wp-cpt-image-uploader-image-gallery-container:before {
+.ds-wp-cpt-image-uploader-removable.has-image:hover .ds-wp-cpt-image-uploader-image-container:before {
   display: block;
   cursor: pointer;
 }

@@ -236,7 +236,7 @@ class TDS_Packages_Shortcode {
         $tds_package_post_type = get_post_meta($tds_post_id, 'tds_package_post_type', true);
 
          //Set the header color
-        $tds_package_color;
+        $tds_package_color= '';
         //BUILD THE HEADER LINE DEPENDING UPON IF THE LAYOUT
         if($tdsCustomAttributes['style'] == 'top') {
           $tds_header_line = $tds_package_title;
@@ -260,15 +260,15 @@ class TDS_Packages_Shortcode {
         } elseif($tds_package_post_type == 'Tour') {
           $tds_package_color = get_option('tds_packages_tour_color_option');
           $tds_click_to_view_text = 'View Detailed Itinerary';
-          $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from </span> <span class="tds-meta-price-combined"> <strong>&nbsp;$' . $tds_package_price . 'pp</strong></span>';
-          $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from $' . $tds_package_price . 'pp</span>';
+          // Commented out 2019.04.16
+          // $tds_meta = '<span class="tds-meta-name">' . $tds_destinations . ': ' . $tds_durations .' from $' . $tds_package_price . 'pp</span>';
 
         } elseif($tds_package_post_type == 'Location') {
           $tds_package_color = get_option('tds_packages_location_color_option');
           $tds_click_to_view_text = 'Read More About ' . $tds_locations;
         } elseif($tds_package_post_type == 'Other') {
           $tds_package_color = get_option('tds_packages_other_color_option');
-          $tds_meta = '<span class="tds-meta-name">Location: ' . $tds_locations . '</span>';
+          $tds_meta .= '<span class="tds-meta-name">Location: ' . $tds_locations . '</span>';
         }
 
         if(!empty($tds_package_link_text) || $tds_package_link_text != '') {
@@ -301,8 +301,8 @@ class TDS_Packages_Shortcode {
             $tdsHTML .= '<a class="' . $tds_package_url_class . '" href="' . $tds_package_url . '" target="' . $tds_package_url_target . '" ' . $tds_link_data . '>' .         $tds_header_line . '</a></h3></div>';
               $tdsHTML .= '<div class="tds-description"><span>';
               $tdsHTML .= $tds_package_description . '</span>';
-              $tdsHTML .= '<div class="tds-meta">' . $tds_meta;
-              $tdsHTML .= '</div></div>';
+              if($tds_meta != '') $tdsHTML .= '<div class="tds-meta">' . $tds_meta . '</div>';
+              $tdsHTML .= '</div>';
 
           $tdsHTML .= '</div> <!-- end tds-item-desc-->';
         }

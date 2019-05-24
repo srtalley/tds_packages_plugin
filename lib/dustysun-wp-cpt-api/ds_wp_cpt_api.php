@@ -1,6 +1,6 @@
 <?php
 // GitHub: N/A
-// Version 1.3.8
+// Version 1.3.7
 // Author: Steve Talley
 // Organization: Dusty Sun
 // Author URL: https://dustysun.com/
@@ -88,7 +88,7 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
       wp_enqueue_script('ds-wp-cpt-api-mediauploader', plugins_url('/js/ds-wp-cpt-file-uploader.js', __FILE__), array('jquery'), '1.3.5', '');
 
       // Load the JS
-      wp_enqueue_script( 'ds-wp-cpt-api-admin', plugins_url( '/js/ds-wp-cpt-api-admin.js', __FILE__ ), array('jquery'), '1.3.8', true );
+      wp_enqueue_script( 'ds-wp-cpt-api-admin', plugins_url( '/js/ds-wp-cpt-api-admin.js', __FILE__ ), array('jquery'), '1.3.5', true );
     } // end if( is_object($screen) && 'wpla_licenses' == $screen->post_type )
   }
 
@@ -129,7 +129,8 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
   public function ds_wp_cpt_api_standard_format_box($post, $callback_fields) {
     // Use nonce for verification
     wp_nonce_field(basename(__FILE__), 'ds_wp_cpt_api_meta_box_nonce');
-
+    $this->wl('eat shit');
+    $this->wl($post);
     echo '<div class="ds-wp-cpt-metabox-settings">';
 
     if(isset($callback_fields['args']['prepend_info'])) {
@@ -149,13 +150,9 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
         // get the saved values if any
         $saved_meta_value = get_post_meta($post->ID, $field['id'], true);
         if($saved_meta_value != '' && $saved_meta_value != null) {
-          if(is_array($saved_meta_value)) {
-            $value_shown = $saved_meta_value;
-          } else {
-            $value_shown = esc_html($saved_meta_value);
-          }
+          $value_shown = $saved_meta_value;
         } else {
-          $value_shown = esc_html($field_default);
+          $value_shown = $field_default;
         } // end if($saved_meta_value != '' && $saved_meta_value != null) 
         
         // Read only flag
@@ -261,7 +258,7 @@ if(!class_exists('Dusty_Sun\WP_CPT_API\v1_3\CPTBuilder'))  { class CPTBuilder {
               break;
           case 'select':
               echo $standardFieldLabel;
-              echo '<select name="'. $field['id'] . '" id="'. $field['id'] . '" class="'. $field_class . '">';
+              echo '<select name="'. $field['id'] . '" id="'. $field['id'] . '">';
               foreach ($field['options'] as $key => $option) {
                 echo '<option value="' . $key . '"'. ( $value_shown == $key ? ' selected="selected"' : '' ) . '>'. $option . '</option>';
               }
